@@ -2,8 +2,6 @@ package coc;
 
 import java.util.*;
 
-import coc.Lexer.Token;
-
 public class Parser {
 
     private Lexer lexer;
@@ -94,7 +92,7 @@ public class Parser {
         Term type = parse();
         expect(Lexer.TokenKind.RPAREN);
 
-        Token dot = lexer.next();
+        Lexer.Token dot = lexer.next();
         push(id);
         Term body;
         try {
@@ -121,8 +119,8 @@ public class Parser {
         stackSize--;
     }
 
-    private Token expect(Lexer.TokenKind kind) {
-        Token tk = lexer.next();
+    private Lexer.Token expect(Lexer.TokenKind kind) {
+        Lexer.Token tk = lexer.next();
         if (tk.kind() != kind)
             throw new CocBloc(tk.index(),
                     "unexpected token " + tk.content());

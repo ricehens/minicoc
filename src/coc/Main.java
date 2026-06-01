@@ -1,7 +1,5 @@
 package coc;
 
-import coc.Lexer.Token;
-
 public class Main {
 
     static String[] tests = {
