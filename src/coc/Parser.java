@@ -31,7 +31,7 @@ public class Parser {
                 pop("_");
                 lexer.unfreezeAndIgnore();
             }
-            return new Term.Pi(term, right);
+            return new Term.Pi(term.index(), term, right);
         } catch (CocBloc e) {
             lexer.unfreezeAndRevert();
             return term;
@@ -44,7 +44,7 @@ public class Parser {
         while (true) {
             try {
                 Term right = parseSimple();
-                term = new Term.App(term, right);
+                term = new Term.App(term.index(), term, right);
                 lexer.unfreezeAndIgnore();
                 lexer.freeze();
             } catch (CocBloc e) {
@@ -64,11 +64,12 @@ public class Parser {
                 if (!reverseStack.containsKey(tk.content()))
                     throw new CocBloc(tk.index(),
                             "cannot resolve variable " + tk.content());
-                return new Term.Var(stackSize - 1 - reverseStack.get(tk.content()));
+                return new Term.Var(tk.index(),
+                        stackSize - 1 - reverseStack.get(tk.content()));
             }
             case PI, LAM -> {
                 expect(Lexer.TokenKind.LPAREN);
-                return parsePiLam(tk.kind() == Lexer.TokenKind.PI);
+                return parsePiLam(tk.index(), tk.kind() == Lexer.TokenKind.PI);
             }
             case LPAREN -> {
                 Term term = parse();
@@ -76,10 +77,10 @@ public class Parser {
                 return term;
             }
             case PROP -> {
-                return Term.Sort.PROP;
+                return new Term.Prop(tk.index());
             }
             case TYPE -> {
-                return Term.Sort.TYPE;
+                return new Term.Type(tk.index());
             }
             default -> throw new CocBloc(tk.index(),
                     "unexpected token " + tk.content());
@@ -87,7 +88,7 @@ public class Parser {
     }
 
     // after first LPAREN
-    private Term parsePiLam(boolean isPi) {
+    private Term parsePiLam(int index, boolean isPi) {
         String id = expect(Lexer.TokenKind.ID).content();
         expect(Lexer.TokenKind.COLON);
         Term type = parse();
@@ -99,7 +100,7 @@ public class Parser {
         try {
             body = switch (dot.kind()) {
                 case DOT -> parse();
-                case LPAREN -> parsePiLam(isPi);
+                case LPAREN -> parsePiLam(dot.index(), isPi);
                 default -> throw new CocBloc(dot.index(),
                         "expected `.`, got `" + dot.content() + "`");
             };
@@ -107,8 +108,8 @@ public class Parser {
             pop(id);
         }
         return isPi
-            ? new Term.Pi(type, body)
-            : new Term.Lam(type, body);
+            ? new Term.Pi(index, type, body)
+            : new Term.Lam(index, type, body);
     }
 
     private void push(String id) {
