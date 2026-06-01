@@ -8,7 +8,7 @@ public class Main {
         """
             λ(A: Prop) (B: Prop). Π(P: Prop).
             (A -> B -> P) -> P
-        """,
+            """,
 
         "Lam (A: Prop). A A A",
 
@@ -17,10 +17,24 @@ public class Main {
         "(λ(x: Prop). (λ(y: Prop). y) x) Type",
 
         "(λ(x: Prop) (y: Prop). x) Type",
+
+        // 1 + 1
+        """
+            (
+             λ(m: Π(A: Prop). (A -> A) -> (A -> A))
+             (n: Π(A: Prop). (A -> A) -> (A -> A))
+             (A: Prop)
+             (f: A -> A)
+             (x: A).
+             m A f (n A f x)
+            )
+            (λ(A: Prop) (f: A -> A) (x: A). f x)
+            (λ(A: Prop) (f: A -> A) (x: A). f x)
+            """
     };
 
     public static void main(String[] args) {
-        String s =  tests[3];
+        String s =  tests[5];
 
         try {
             Lexer lex = new Lexer(s);
@@ -32,8 +46,8 @@ public class Main {
 
             Parser p = new Parser(lex);
             Term t = p.parse();
-            System.out.println(t);
-            System.out.println(new BetaReducer().normalize(t));
+            System.out.println(t.print());
+            System.out.println(new BetaReducer().normalize(t).print());
 
             /*
             if (lex.hasNext()) {

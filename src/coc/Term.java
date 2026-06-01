@@ -50,7 +50,7 @@ public sealed interface Term {
         public String print(Term term) {
             return switch (term) {
                 case Sort s -> s == Sort.PROP ? "Prop" : "Type";
-                case Var(int index) -> "v" + (cnt - index);
+                case Var(int index) -> "v" + (cnt - 1 - index);
                 case Pi(Term type, Term body) -> {
                     String sType = print(type);
                     cnt++;
@@ -65,7 +65,8 @@ public sealed interface Term {
                     cnt--;
                     yield String.format("λ(v%d: (%s)). (%s)", cnt, sType, sBody);
                 }
-                case App(Term left, Term right) -> print(left) + " " + print(right);
+                case App(Term left, Term right) ->
+                    String.format("(%s) (%s)", print(left), print(right));
             };
         }
 
