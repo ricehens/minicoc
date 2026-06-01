@@ -66,7 +66,6 @@ public sealed interface Term {
                     yield String.format("λ(v%d: (%s)). (%s)", cnt, sType, sBody);
                 }
                 case App(Term left, Term right) -> print(left) + " " + print(right);
-                default -> throw new AssertionError();
             };
         }
 

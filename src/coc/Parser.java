@@ -64,7 +64,7 @@ public class Parser {
                 if (!reverseStack.containsKey(tk.content()))
                     throw new CocBloc(tk.index(),
                             "cannot resolve variable " + tk.content());
-                return new Term.Var(stackSize - reverseStack.get(tk.content()));
+                return new Term.Var(stackSize - 1 - reverseStack.get(tk.content()));
             }
             case PI, LAM -> {
                 expect(Lexer.TokenKind.LPAREN);
