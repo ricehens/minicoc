@@ -43,7 +43,7 @@ public sealed interface Term {
         return new PrettyPrinter().print(this);
     }
 
-    public class PrettyPrinter {
+    class PrettyPrinter {
 
         private int cnt;
 
