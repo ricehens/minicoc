@@ -4,7 +4,7 @@ public class BetaReducer {
 
     public static Term normalize(Term term) {
         return switch (term) {
-            case Term.Prop _, Term.Type _, Term.Var _ -> term;
+            case Term.Sort _, Term.Var _ -> term;
 
             case Term.Lam(int index, Term type, Term body)
                 -> new Term.Lam(index, normalize(type), normalize(body));
@@ -25,7 +25,7 @@ public class BetaReducer {
 
     public static Term shift(Term term, int amount, int cutoff) {
         return switch (term) {
-            case Term.Prop _, Term.Type _ -> term;
+            case Term.Sort _ -> term;
 
             case Term.Var(int index, int bruijn) -> {
                 if (bruijn >= cutoff)
@@ -55,7 +55,7 @@ public class BetaReducer {
 
     public static Term subst(Term term, int depth, Term replacement) {
         return switch (term) {
-            case Term.Prop _, Term.Type _ -> term;
+            case Term.Sort _ -> term;
 
             case Term.Var(int index, int bruijn) -> {
                 if (bruijn == depth)

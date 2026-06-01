@@ -2,9 +2,11 @@ package coc;
 
 public sealed interface Term {
 
-    record Prop(int index) implements Term {}
+    enum SortKind {
+        PROP, TYPE
+    }
 
-    record Type(int index) implements Term {}
+    record Sort(int index, SortKind kind) implements Term {}
 
     // https://en.wikipedia.org/wiki/De_Bruijn_index
     record Var(int index, int bruijn) implements Term {
@@ -51,8 +53,8 @@ public sealed interface Term {
 
         public String print(Term term) {
             return switch (term) {
-                case Prop(int _) -> "Prop";
-                case Type(int _) -> "Type";
+                case Sort(int _, SortKind kind)
+                    -> kind == SortKind.PROP ? "Prop" : "Type";
                 case Var(int _, int bruijn) -> "v" + (cnt - 1 - bruijn);
                 case Pi(int _, Term type, Term body) -> {
                     String sType = print(type);

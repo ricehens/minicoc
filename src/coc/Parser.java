@@ -75,10 +75,10 @@ public class Parser {
                 return term;
             }
             case PROP -> {
-                return new Term.Prop(tk.index());
+                return new Term.Sort(tk.index(), Term.SortKind.PROP);
             }
             case TYPE -> {
-                return new Term.Type(tk.index());
+                return new Term.Sort(tk.index(), Term.SortKind.TYPE);
             }
             default -> throw new CocBloc(tk.index(),
                     "unexpected token " + tk.content());
