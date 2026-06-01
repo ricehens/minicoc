@@ -2,7 +2,7 @@ package coc;
 
 public class BetaReducer {
 
-    public Term normalize(Term term) {
+    public static Term normalize(Term term) {
         return switch (term) {
             case Term.Prop _, Term.Type _, Term.Var _ -> term;
 
@@ -23,7 +23,7 @@ public class BetaReducer {
         };
     }
 
-    private Term shift(Term term, int amount, int cutoff) {
+    public static Term shift(Term term, int amount, int cutoff) {
         return switch (term) {
             case Term.Prop _, Term.Type _ -> term;
 
@@ -53,7 +53,7 @@ public class BetaReducer {
         };
     }
 
-    Term subst(Term term, int depth, Term replacement) {
+    public static Term subst(Term term, int depth, Term replacement) {
         return switch (term) {
             case Term.Prop _, Term.Type _ -> term;
 

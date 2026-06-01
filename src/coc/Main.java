@@ -47,7 +47,7 @@ public class Main {
             Parser p = new Parser(lex);
             Term t = p.parse();
             System.out.println(t.print());
-            System.out.println(new BetaReducer().normalize(t).print());
+            System.out.println(BetaReducer.normalize(t).print());
 
             /*
             if (lex.hasNext()) {
