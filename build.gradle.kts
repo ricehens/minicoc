@@ -3,7 +3,7 @@ plugins {
     application
 }
 
-group = "coc"
+group = "MiniCoc"
 version = "0.1.0"
 
 java {
