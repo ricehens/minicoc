@@ -4,40 +4,39 @@ public sealed interface Term {
 
     enum Sort implements Term {
         PROP, TYPE;
-
-        @Override
-        public String toString() {
-            return new PrettyPrinter().print(this);
-        }
     }
 
     // https://en.wikipedia.org/wiki/De_Bruijn_index
     record Var(int index) implements Term {
         @Override
         public String toString() {
-            return new PrettyPrinter().print(this);
+            return "" + index;
         }
     }
 
     record Pi(Term type, Term body) implements Term {
         @Override
         public String toString() {
-            return new PrettyPrinter().print(this);
+            return String.format("(Π %s %s)", type, body);
         }
     }
 
     record Lam(Term type, Term body) implements Term {
         @Override
         public String toString() {
-            return new PrettyPrinter().print(this);
+            return String.format("(λ %s %s)", type, body);
         }
     }
 
     record App(Term left, Term right) implements Term {
         @Override
         public String toString() {
-            return new PrettyPrinter().print(this);
+            return String.format("(%s %s)", left, right);
         }
+    }
+
+    default String print() {
+        return new PrettyPrinter().print(this);
     }
 
     public class PrettyPrinter {
