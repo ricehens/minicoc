@@ -17,12 +17,9 @@ public class Lexer {
     private char[] c;
     private int index;
 
-    private Queue<String> errors;
-
     public Lexer(String str) {
         c = str.toCharArray();
         index = 0;
-        errors = new LinkedList<>();
         frozen = new Stack<>();
     }
 
