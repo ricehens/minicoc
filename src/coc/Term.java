@@ -3,16 +3,74 @@ package coc;
 public sealed interface Term {
 
     enum Sort implements Term {
-        PROP, TYPE
+        PROP, TYPE;
+
+        @Override
+        public String toString() {
+            return new PrettyPrinter().print(this);
+        }
     }
 
     // https://en.wikipedia.org/wiki/De_Bruijn_index
-    record Var(int index) implements Term {}
+    record Var(int index) implements Term {
+        @Override
+        public String toString() {
+            return new PrettyPrinter().print(this);
+        }
+    }
 
-    record Pi(Term type, Term body) implements Term {}
+    record Pi(Term type, Term body) implements Term {
+        @Override
+        public String toString() {
+            return new PrettyPrinter().print(this);
+        }
+    }
 
-    record Lam(Term type, Term body) implements Term {}
+    record Lam(Term type, Term body) implements Term {
+        @Override
+        public String toString() {
+            return new PrettyPrinter().print(this);
+        }
+    }
 
-    record App(Term left, Term right) implements Term {}
+    record App(Term left, Term right) implements Term {
+        @Override
+        public String toString() {
+            return new PrettyPrinter().print(this);
+        }
+    }
+
+    public class PrettyPrinter {
+
+        private int cnt;
+
+        public PrettyPrinter() {
+            cnt = 1;
+        }
+
+        public String print(Term term) {
+            return switch (term) {
+                case Sort s -> s == Sort.PROP ? "Prop" : "Type";
+                case Var(int index) -> "v" + (cnt - index);
+                case Pi(Term type, Term body) -> {
+                    String sType = print(type);
+                    cnt++;
+                    String sBody = print(body);
+                    cnt--;
+                    yield String.format("Π(v%d: (%s)). (%s)", cnt, sType, sBody);
+                }
+                case Lam(Term type, Term body) -> {
+                    String sType = print(type);
+                    cnt++;
+                    String sBody = print(body);
+                    cnt--;
+                    yield String.format("λ(v%d: (%s)). (%s)", cnt, sType, sBody);
+                }
+                case App(Term left, Term right) -> print(left) + " " + print(right);
+                default -> throw new AssertionError();
+            };
+        }
+
+    }
 
 }

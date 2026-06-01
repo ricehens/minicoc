@@ -4,12 +4,8 @@ import coc.Lexer.Token;
 
 public class Main {
     public static void main(String[] args) {
-        /*
-         * \(A: Prop) (B: Prop). Pi (P: Prop). (A -> B -> P) -> P
-         */
-
         String and = """
-            Lam (A: Prop) (B: Prop). Pi (P: Prop).
+            λ(A: Prop) (B: Prop). Π(P: Prop).
                 (A -> B -> P) -> P
                 """;
         // String and = "Lam (A: Prop). A A A";
