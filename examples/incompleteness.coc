@@ -17,72 +17,72 @@ Con : Π (W: Prop) (☐: (W → Prop) → (W → Prop)). (W → Prop)
 Con = λ (W: Prop) (☐: (W → Prop) → (W → Prop)). ¬ W (☐ (⊥ W))
 
 
--- Lemma 1: ⊢ ☐(G → ¬☐G)
+-- Lemma 1: ⊢ ☐(φ → ¬☐φ)
 Lemma1 : Π (W: Prop) (☐: (W → Prop) → (W → Prop))
            (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
            (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
            (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
                  ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-           (G: W → Prop)
-           (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-           (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-         ⊨ W (☐ (⊃ W G (¬ W (☐ G))))
+           (φ: W → Prop)
+           (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+           (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+         ⊨ W (☐ (⊃ W φ (¬ W (☐ φ))))
 Lemma1 = λ (W: Prop) (☐: (W → Prop) → (W → Prop))
            (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
            (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
            (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
                  ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-           (G: W → Prop)
-           (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-           (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-         HB1 (⊃ W G (¬ W (☐ G))) G1
+           (φ: W → Prop)
+           (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+           (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+         HB1 (⊃ W φ (¬ W (☐ φ))) G1
 
 
--- Lemma 2: ⊢ ☐G → ☐(¬☐G)
+-- Lemma 2: ⊢ ☐φ → ☐(¬☐φ)
 Lemma2 : Π (W: Prop) (☐: (W → Prop) → (W → Prop))
            (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
            (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
            (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
                  ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-           (G: W → Prop)
-           (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-           (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-         ⊨ W (⊃ W (☐ G) (☐ (¬ W (☐ G))))
+           (φ: W → Prop)
+           (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+           (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+         ⊨ W (⊃ W (☐ φ) (☐ (¬ W (☐ φ))))
 Lemma2 = λ (W: Prop) (☐: (W → Prop) → (W → Prop))
            (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
            (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
            (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
                  ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-           (G: W → Prop)
-           (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-           (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-         λ (w: W) (x: ☐ G w).
-         HB3 G (¬ W (☐ G)) w 
-           (Lemma1 W ☐ HB1 HB2 HB3 G G1 G2 w) x
+           (φ: W → Prop)
+           (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+           (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+         λ (w: W) (x: ☐ φ w).
+         HB3 φ (¬ W (☐ φ)) w 
+           (Lemma1 W ☐ HB1 HB2 HB3 φ G1 G2 w) x
 
 
--- Lemma 3: ⊢ ☐G → ☐⊥
+-- Lemma 3: ⊢ ☐φ → ☐⊥
 Lemma3 : Π (W: Prop) (☐: (W → Prop) → (W → Prop))
            (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
            (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
            (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
                  ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-           (G: W → Prop)
-           (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-           (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-         ⊨ W (⊃ W (☐ G) (☐ (⊥ W)))
+           (φ: W → Prop)
+           (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+           (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+         ⊨ W (⊃ W (☐ φ) (☐ (⊥ W)))
 Lemma3 = λ (W: Prop) (☐: (W → Prop) → (W → Prop))
            (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
            (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
            (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
                  ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-           (G: W → Prop)
-           (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-           (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-         λ (w: W) (x: ☐ G w).
-         HB3 (☐ G) (⊥ W) w 
-           (Lemma2 W ☐ HB1 HB2 HB3 G G1 G2 w x) 
-           (HB2 G w x)
+           (φ: W → Prop)
+           (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+           (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+         λ (w: W) (x: ☐ φ w).
+         HB3 (☐ φ) (⊥ W) w 
+           (Lemma2 W ☐ HB1 HB2 HB3 φ G1 G2 w x) 
+           (HB2 φ w x)
 
 
 -- G1a: ⊢ Consistency → ¬☐G
@@ -91,20 +91,20 @@ G1a : Π (W: Prop) (☐: (W → Prop) → (W → Prop))
         (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
         (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
               ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-        (G: W → Prop)
-        (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-        (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-      ⊨ W (⊃ W (Con W ☐) (¬ W (☐ G)))
+        (φ: W → Prop)
+        (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+        (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+      ⊨ W (⊃ W (Con W ☐) (¬ W (☐ φ)))
 G1a = λ (W: Prop) (☐: (W → Prop) → (W → Prop))
         (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
         (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
         (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
               ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-        (G: W → Prop)
-        (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-        (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-      λ (w: W) (C: Con W ☐ w) (x: ☐ G w).
-      C (Lemma3 W ☐ HB1 HB2 HB3 G G1 G2 w x)
+        (φ: W → Prop)
+        (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+        (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+      λ (w: W) (C: Con W ☐ w) (x: ☐ φ w).
+      C (Lemma3 W ☐ HB1 HB2 HB3 φ G1 G2 w x)
 
 
 -- G1b: ⊢ Consistency → G
@@ -113,42 +113,42 @@ G1b : Π (W: Prop) (☐: (W → Prop) → (W → Prop))
         (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
         (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
               ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-        (G: W → Prop)
-        (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-        (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-      ⊨ W (⊃ W (Con W ☐) G)
+        (φ: W → Prop)
+        (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+        (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+      ⊨ W (⊃ W (Con W ☐) φ)
 G1b = λ (W: Prop) (☐: (W → Prop) → (W → Prop))
         (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
         (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
         (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
               ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-        (G: W → Prop)
-        (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-        (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
+        (φ: W → Prop)
+        (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+        (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
       λ (w: W) (C: Con W ☐ w).
-      G2 w (G1a W ☐ HB1 HB2 HB3 G G1 G2 w C)
+      G2 w (G1a W ☐ HB1 HB2 HB3 φ G1 G2 w C)
 
 
--- Lemma 4: ⊢ ☐(Consistency → G)
+-- Lemma 4: ⊢ ☐(Consistency → φ)
 Lemma4 : Π (W: Prop) (☐: (W → Prop) → (W → Prop))
            (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
            (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
            (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
                  ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-           (G: W → Prop)
-           (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-           (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-         ⊨ W (☐ (⊃ W (Con W ☐) G))
+           (φ: W → Prop)
+           (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+           (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+         ⊨ W (☐ (⊃ W (Con W ☐) φ))
 Lemma4 = λ (W: Prop) (☐: (W → Prop) → (W → Prop))
            (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
            (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
            (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
                  ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-           (G: W → Prop)
-           (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-           (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-         HB1 (⊃ W (Con W ☐) G) 
-           (G1b W ☐ HB1 HB2 HB3 G G1 G2)
+           (φ: W → Prop)
+           (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+           (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+         HB1 (⊃ W (Con W ☐) φ) 
+           (G1b W ☐ HB1 HB2 HB3 φ G1 G2)
 
 
 -- Lemma 5: ⊢ ☐Consistency → ☐G
@@ -157,21 +157,21 @@ Lemma5 : Π (W: Prop) (☐: (W → Prop) → (W → Prop))
            (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
            (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
                  ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-           (G: W → Prop)
-           (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-           (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
-         ⊨ W (⊃ W (☐ (Con W ☐)) (☐ G))
+           (φ: W → Prop)
+           (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+           (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
+         ⊨ W (⊃ W (☐ (Con W ☐)) (☐ φ))
 Lemma5 = λ (W: Prop) (☐: (W → Prop) → (W → Prop))
            (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
            (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
            (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
                  ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-           (G: W → Prop)
-           (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-           (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
+           (φ: W → Prop)
+           (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+           (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
          λ (w: W) (x: ☐ (Con W ☐) w).
-         HB3 (Con W ☐) G w 
-           (Lemma4 W ☐ HB1 HB2 HB3 G G1 G2 w) x
+         HB3 (Con W ☐) φ w 
+           (Lemma4 W ☐ HB1 HB2 HB3 φ G1 G2 w) x
 
 
 -- G2: ⊢ ☐Consistency → ☐⊥
@@ -180,18 +180,18 @@ G2 : Π (W: Prop) (☐: (W → Prop) → (W → Prop))
        (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
        (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
              ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-       (G: W → Prop)
-       (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-       (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
+       (φ: W → Prop)
+       (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+       (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
      ⊨ W (⊃ W (☐ (Con W ☐)) (☐ (⊥ W)))
 G2 = λ (W: Prop) (☐: (W → Prop) → (W → Prop))
        (HB1: Π (P: W → Prop). ⊨ W P → ⊨ W (☐ P))
        (HB2: Π (P: W → Prop) (w: W). ☐ P w → ☐ (☐ P) w)
        (HB3: Π (P: W → Prop) (Q: W → Prop) (w: W).
              ☐ (⊃ W P Q) w → ☐ P w → ☐ Q w)
-       (G: W → Prop)
-       (G1: ⊨ W (⊃ W G (¬ W (☐ G))))
-       (G2: ⊨ W (⊃ W (¬ W (☐ G)) G)).
+       (φ: W → Prop)
+       (G1: ⊨ W (⊃ W φ (¬ W (☐ φ))))
+       (G2: ⊨ W (⊃ W (¬ W (☐ φ)) φ)).
      λ (w: W) (x: ☐ (Con W ☐) w).
-     Lemma3 W ☐ HB1 HB2 HB3 G G1 G2 w 
-       (Lemma5 W ☐ HB1 HB2 HB3 G G1 G2 w x)
+     Lemma3 W ☐ HB1 HB2 HB3 φ G1 G2 w 
+       (Lemma5 W ☐ HB1 HB2 HB3 φ G1 G2 w x)
