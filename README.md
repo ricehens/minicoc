@@ -36,7 +36,7 @@ Type
 -- Application
 <term> <term> -- left associative
 ```
-To avoid Girard's paradox (the type theory version of Russell's paradox), the type of `Type` may not be inferred. More complicated systems have a hierarchy of types (see the Calculus of Inductive Types), but this minimal implementation of CoC does not.
+To avoid Girard's paradox (the type-theory version of Russell's paradox), the type of `Type` may not be inferred. More complicated systems have a hierarchy of types (see the Calculus of Inductive Types), but this minimal implementation of CoC does not.
 
 For notational convenience, the following syntax is also provided:
 ```

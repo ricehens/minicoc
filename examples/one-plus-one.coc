@@ -22,7 +22,7 @@ Eq = λ(T: Prop) (x: T) (y: T).
 
 -- Prop (Reflexivity): x == x for all x
 refl : Π(T: Prop) (x: T). Eq T x x
-refl = λ(T: Prop) (x: T) (P: T -> Prop) (h: P x). h
+refl = λ(T: Prop) (x: T) (P: T -> Prop) (Hx: P x). Hx
 
 -- Prop: succ(0) == 1
 one_succeeds_zero : Eq Nat (succ zero) one

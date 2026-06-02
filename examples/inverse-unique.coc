@@ -1,0 +1,54 @@
+Eq : Π(T: Prop). T -> T -> Prop
+Eq = λ(T: Prop) (x: T) (y: T).
+     Π(P: T -> Prop). P x -> P y
+
+refl : Π(T: Prop) (x: T). Eq T x x
+refl = λ(T: Prop) (x: T) (P: T -> Prop) (Hx: P x). Hx
+
+-- Symmetry: If x == y, then y == x
+sym : Π(T: Prop) (x: T) (y: T). Eq T x y -> Eq T y x
+sym = λ(T: Prop) (x: T) (y: T) (Hxy: Eq T x y).
+      Hxy (λ(z: T). Eq T z x) (refl T x)
+
+-- Transitivity: If x == y and y == z, then x == z
+trans : Π(T: Prop) (x: T) (y: T) (z: T). Eq T x y -> Eq T y z -> Eq T x z
+trans = λ(T: Prop) (x: T) (y: T) (z: T) (Hxy: Eq T x y) (Hyz: Eq T y z).
+        Hyz (λ(w: T). Eq T x w) Hxy
+
+-- Left Congruence: If x == y, then c * x == c * y
+congrL : Π(T: Prop) (op: T -> T -> T) (c: T) (x: T) (y: T). Eq T x y -> Eq T (op c x) (op c y)
+congrL = λ(T: Prop) (op: T -> T -> T) (c: T) (x: T) (y: T) (Hxy: Eq T x y).
+         Hxy (λ(z: T). Eq T (op c x) (op c z)) (refl T (op c x))
+
+-- Right Congruence: If x == y, then x * c == y * c
+congrR : Π(T: Prop) (op: T -> T -> T) (x: T) (y: T) (c: T). Eq T x y -> Eq T (op x c) (op y c)
+congrR = λ(T: Prop) (op: T -> T -> T) (x: T) (y: T) (c: T) (Hxy: Eq T x y).
+         Hxy (λ(z: T). Eq T (op x c) (op z c)) (refl T (op x c))
+
+-- Uniqueness of Inverse
+-- If b * a = id and a * c = id then b = c.
+unique_inv : Π(G: Prop) (op: G -> G -> G) (id: G) (a: G) (b: G) (c: G)
+             (assoc: Π(x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
+             (idR:   Π(x: G). Eq G (op x id) x)
+             (idL:   Π(x: G). Eq G (op id x) x)
+             (H1:    Eq G (op b a) id)
+             (H2:    Eq G (op a c) id).
+             Eq G b c
+unique_inv = λ(G: Prop) (op: G -> G -> G) (id: G) (a: G) (b: G) (c: G)
+             (assoc: Π(x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
+             (idR:   Π(x: G). Eq G (op x id) x)
+             (idL:   Π(x: G). Eq G (op id x) x)
+             (H1:    Eq G (op b a) id)
+             (H2:    Eq G (op a c) id).
+             trans G b (op b id) c
+               (sym G (op b id) b (idR b))
+               (trans G (op b id) (op b (op a c)) c
+                 (congrL G op b id (op a c) (sym G (op a c) id H2))
+                 (trans G (op b (op a c)) (op (op b a) c) c
+                   (sym G (op (op b a) c) (op b (op a c)) (assoc b a c))
+                   (trans G (op (op b a) c) (op id c) c
+                     (congrR G op (op b a) id c H1)
+                     (idL c)
+                   )
+                 )
+               )
