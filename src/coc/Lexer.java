@@ -10,16 +10,22 @@ public class Lexer {
         ARROW,
         LAM, PI,
         PROP, TYPE,
+        EQUAL,
     };
 
     record Token(TokenKind kind, int index, String content) {}
 
-    private char[] c;
+    private final char[] c;
     private int index;
+    private final int offset;
 
-    public Lexer(String str) {
-        c = str.toCharArray();
+    public Lexer(Environment env, String str) {
+        String prefix = env.getPrefix();
+        String suffix = env.getSuffix();
+System.out.println(prefix + str + suffix);
+        c = (prefix + str + suffix).toCharArray();
         index = 0;
+        offset = prefix.length();
         frozen = new Stack<>();
     }
 
@@ -27,17 +33,22 @@ public class Lexer {
         if (!hasNext()) throw new CocBloc(c.length, "no more tokens");
 
         return switch (c[index]) {
-            case ':' -> new Token(TokenKind.COLON, index, "" + c[index++]);
-            case '(' -> new Token(TokenKind.LPAREN, index, "" + c[index++]);
-            case ')' -> new Token(TokenKind.RPAREN, index, "" + c[index++]);
-            case '.' -> new Token(TokenKind.DOT, index, "" + c[index++]);
-            case 'λ' -> new Token(TokenKind.LAM, index, "" + c[index++]);
-            case 'Π' -> new Token(TokenKind.PI, index, "" + c[index++]);
-            case '→', '⇒' -> new Token(TokenKind.ARROW, index, "" + c[index++]);
-            case '-', '=' -> {
+            case ':' -> new Token(TokenKind.COLON, index - offset, "" + c[index++]);
+            case '(' -> new Token(TokenKind.LPAREN, index - offset, "" + c[index++]);
+            case ')' -> new Token(TokenKind.RPAREN, index - offset, "" + c[index++]);
+            case '.' -> new Token(TokenKind.DOT, index - offset, "" + c[index++]);
+            case 'λ' -> new Token(TokenKind.LAM, index - offset, "" + c[index++]);
+            case 'Π' -> new Token(TokenKind.PI, index - offset, "" + c[index++]);
+            case '→', '⇒' -> new Token(TokenKind.ARROW, index - offset, "" + c[index++]);
+            case '-' -> {
                 if (index + 1 >= c.length || c[index + 1] != '>')
-                    throw new CocBloc(index, "unexpected character `" + c[index] + "`");
-                yield new Token(TokenKind.ARROW, index, "" + c[index++] + c[index++]);
+                    throw new CocBloc(index, "unexpected character `-`");
+                yield new Token(TokenKind.ARROW, index - offset, "" + c[index++] + c[index++]);
+            }
+            case '=' -> {
+                if (index + 1 >= c.length || c[index + 1] != '>')
+                    yield new Token(TokenKind.EQUAL, index - offset, "" + c[index++]);
+                yield new Token(TokenKind.ARROW, index - offset, "" + c[index++] + c[index++]);
             }
             default -> {
                 if (!Character.isJavaIdentifierStart(c[index])) {
@@ -52,11 +63,11 @@ public class Lexer {
                 String s = sb.toString();
 
                 yield switch (s) {
-                    case "Prop" -> new Token(TokenKind.PROP, start, s);
-                    case "Type" -> new Token(TokenKind.TYPE, start, s);
-                    case "Lam" -> new Token(TokenKind.LAM, start, s);
-                    case "Pi" -> new Token(TokenKind.PI, start, s);
-                    default -> new Token(TokenKind.ID, start, s);
+                    case "Prop" -> new Token(TokenKind.PROP, start - offset, s);
+                    case "Type" -> new Token(TokenKind.TYPE, start - offset, s);
+                    case "Lam" -> new Token(TokenKind.LAM, start - offset, s);
+                    case "Pi" -> new Token(TokenKind.PI, start - offset, s);
+                    default -> new Token(TokenKind.ID, start - offset, s);
                 };
             }
         };

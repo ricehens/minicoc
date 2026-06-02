@@ -10,17 +10,17 @@ public class Environment {
         suffix = new StringBuilder();
     }
 
-    public void bind(String name, String type, String val) {
-        prefix.append(String.format("%nλ(%s : (%s))%n", name, type));
-        suffix.insert(0, String.format("%n(%s)%n", val));
+    public void bind(String name, String val, String type) {
+        prefix.append(String.format("%n(λ(%s : (%s)).%n", name, type));
+        suffix.insert(0, String.format("%n)(%s)%n", val));
     }
 
     public String getPrefix() {
-        return prefix.toString() + String.format("%n(%n");
+        return prefix.toString();
     }
 
     public String getSuffix() {
-        return String.format("%n)%n") + suffix.toString();
+        return suffix.toString();
     }
 
 }

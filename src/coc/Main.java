@@ -17,6 +17,9 @@ public class Main {
 
         "(λ(x: Prop) (y: Prop). x) Type",
 
+        // Nat : Prop
+        "Π(A: Prop). (A -> A) -> (A -> A)",
+
         // 1 + 1 : Nat, i.e. Π(A: Prop). (A -> A) -> (A -> A)
         """
             (
@@ -55,10 +58,12 @@ public class Main {
     };
 
     public static void main(String[] args) {
-        String s =  tests[11];
+        String s =  tests[12];
 
         try {
-            Lexer lex = new Lexer(s);
+            Environment env = new Environment();
+            env.bind("Nat", tests[5], "Prop");
+            Lexer lex = new Lexer(env, s);
             /*
                while (lex.hasNext()) {
                System.out.println(lex.next());
@@ -67,9 +72,11 @@ public class Main {
 
             Parser p = new Parser(lex);
             Term t = p.parse();
-            // System.out.println(t.print());
+            System.out.println(t.print());
             System.out.println(BetaReducer.normalize(t));
             System.out.println(new TypeChecker().infer(t));
+
+            System.out.println(BetaReducer.normalize(t).equals(BetaReducer.normalize(new Parser(new Lexer(env, t.print())).parse())));
 
             /*
             if (lex.hasNext()) {
@@ -78,6 +85,11 @@ public class Main {
                         "unexpected token " + tk.content());
             }
             */
+
+            String n2n = "Nat -> Nat";
+            Term tn2n = new Parser(new Lexer(env, n2n)).parse();
+            System.out.println(BetaReducer.normalize(new TypeChecker().infer(t))
+                    .equals(BetaReducer.normalize(tn2n)));
 
         } catch (CocBloc e) {
             System.err.printf("Error at index %d: %s%n",
