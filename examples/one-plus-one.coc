@@ -1,28 +1,28 @@
 Nat : Prop
 Nat = Π(A: Prop).
-      (A -> A) -> (A -> A) 
+      (A → A) → (A → A) 
 
 zero : Nat
-zero = λ(A: Prop) (f: A -> A) (x: A). x
+zero = λ(A: Prop) (f: A → A) (x: A). x
 
-succ : Nat -> Nat
-succ = λ(n: Nat) (A: Prop) (f: A -> A) (x: A).
+succ : Nat → Nat
+succ = λ(n: Nat) (A: Prop) (f: A → A) (x: A).
        f (n A f x)
 
 one : Nat
-one = λ(A: Prop) (f: A -> A) (x: A). f x
+one = λ(A: Prop) (f: A → A) (x: A). f x
 -- one = succ zero
 
 two : Nat
-two = λ(A: Prop) (f: A -> A) (x: A). f (f x)
+two = λ(A: Prop) (f: A → A) (x: A). f (f x)
 
-Eq : Π(T: Prop). T -> T -> Prop
+Eq : Π(T: Prop). T → T → Prop
 Eq = λ(T: Prop) (x: T) (y: T).
-     Π(P: T -> Prop). P x -> P y
+     Π(P: T → Prop). P x → P y
 
 -- Prop (Reflexivity): x == x for all x
 refl : Π(T: Prop) (x: T). Eq T x x
-refl = λ(T: Prop) (x: T) (P: T -> Prop) (Hx: P x). Hx
+refl = λ(T: Prop) (x: T) (P: T → Prop) (Hx: P x). Hx
 
 -- Prop: succ(0) == 1
 one_succeeds_zero : Eq Nat (succ zero) one
@@ -32,8 +32,8 @@ one_succeeds_zero = refl Nat one
 two_succeeds_one : Eq Nat (succ one) two
 two_succeeds_one = refl Nat two
 
-plus : Nat -> Nat -> Nat
-plus = λ(m: Nat) (n: Nat) (A: Prop) (f: A -> A) (x: A).
+plus : Nat → Nat → Nat
+plus = λ(m: Nat) (n: Nat) (A: Prop) (f: A → A) (x: A).
        m A f (n A f x)
 
 -- Prop: 1 + 1 == 2
