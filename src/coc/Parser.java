@@ -120,6 +120,8 @@ public class Parser {
 
     private void pop(String id) {
         ctx.get(id).pop();
+        if (ctx.get(id).empty())
+            ctx.remove(id);
         stackSize--;
     }
 

@@ -99,7 +99,7 @@ public class Main {
 
             runtime.flush(args[0]);
         } catch (IOException e) {
-            System.err.printf("%s%s: %serror%s could not open file",
+            System.err.printf("%s%s: %serror%s unable to open file",
                     ANSI_WHITE_BOLD, args[0], ANSI_RED_BOLD, ANSI_RESET);
             System.exit(1);
         } catch (CocBloc e) {
