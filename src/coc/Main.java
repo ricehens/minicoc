@@ -1,5 +1,8 @@
 package coc;
 
+import java.io.*;
+import java.util.*;
+
 public class Main {
 
     static String[] tests = {
@@ -58,6 +61,44 @@ public class Main {
     };
 
     public static void main(String[] args) {
+        if (args.length != 1 || args[0].equals("-h") || args[0].equals("--help")) {
+            // TODO print usage
+            tmp();
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(args[0]))) {
+            List<String> lines = br.readAllLines();
+            Map<String, String> boundTypes = new HashMap<>();
+            
+outer:
+            for (int i = 0; i < lines.size();) {
+                while (lines.get(i).length() == 0)
+                    if (++i >= lines.size())
+                        break outer;
+
+                if (Character.isWhitespace(lines.get(i).charAt(0))) {
+                    System.err.printf("error: unexpected whitespace "
+                            + "at start of line %d%n", i + 1);
+                    System.exit(1);
+                }
+
+                StringBuilder sb = new StringBuilder();
+                do {
+                    sb.append(String.format("%s%n", lines.get(i++)));
+                } while (i < lines.size()
+                        && (lines.get(i).length() == 0
+                            || Character.isWhitespace(lines.get(i).charAt(0))));
+
+                System.out.println("========");
+                System.out.println(sb.toString());
+            }
+        } catch (IOException e) {
+            System.err.printf("error: could not open file %s%n", args[0]);
+            System.exit(1);
+        }
+    }
+
+    private static void tmp() {
         String s =  tests[12];
 
         try {
