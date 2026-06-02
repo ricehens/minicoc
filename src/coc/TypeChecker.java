@@ -31,7 +31,7 @@ public class TypeChecker {
                             "expected type Sort for domain of Pi");
 
                 push(type);
-                Term tBody = normalize(infer(body));
+                Term tBody = infer(body);
                 if (!(tBody instanceof Term.Sort))
                     throw new CocBloc(body.index(),
                             "expected type Sort for body of Pi");
@@ -46,7 +46,7 @@ public class TypeChecker {
                             "expected type Sort for domain of Lambda");
 
                 push(type);
-                Term tBody = normalize(infer(body));
+                Term tBody = infer(body);
                 pop();
                 yield new Term.Pi(-1, type, tBody);
             }
@@ -58,9 +58,12 @@ public class TypeChecker {
                             "expected type Pi for left side of function application");
 
                 Term tRight = normalize(infer(right));
-                if (!tRight.equals(normalize(domain)))
+                if (!tRight.equals(normalize(domain))) {
+System.out.println("EXPECTED: domain of " + tLeft);
+System.out.println("GOT: " + tRight);
                     throw new CocBloc(index,
                             "type mismatch for function application");
+                }
 
                 yield subst(codomain, 0, right);
             }

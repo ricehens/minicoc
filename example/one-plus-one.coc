@@ -1,18 +1,9 @@
-Nat : Type
-Nat = Π (A : Type). A → (A → A) → A
+Nat : Prop
+Nat = Π(A: Prop). (A -> A) -> (A -> A)
 
 one : Nat
-one = λ (A : Type) (z : A) (s : A → A).
-      s z
+one = λ(A: Prop) (f: A -> A) (x: A). f x
 
 two : Nat
-two = λ (A : Type) (z : A) (s : A → A).
-      s (s z)
-
-add : Nat → Nat → Nat
-add ≡ λ (m : Nat) (n : Nat) (A : Type) (z : A) (s : A → A).
-      m A (n A z s) s
-
-Eq : Π (A : Type). A → A → Prop
-Eq = λ (A : Type) (x : A) (y : A).
-     Π (P : A → Prop). P x → P y
+-- two = λ(A: Prop) (f: A -> A) (x: A). f (f x)
+two = λ(A: Prop) (f: A -> A) (x: A). f x

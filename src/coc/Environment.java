@@ -15,12 +15,12 @@ public class Environment {
         suffix.insert(0, String.format("%n)(%s)%n", val));
     }
 
-    public String getPrefix() {
-        return prefix.toString();
+    public String wrap(String s) {
+        return prefix.toString() + s + suffix.toString();
     }
 
-    public String getSuffix() {
-        return suffix.toString();
+    public int offset() {
+        return prefix.length();
     }
 
 }

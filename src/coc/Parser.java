@@ -20,7 +20,7 @@ public class Parser {
         Term term = parseApplication();
         lexer.freeze();
         try {
-            expect(Lexer.TokenKind.ARROW);
+            lexer.expect(Lexer.TokenKind.ARROW);
             push("_");
             Term right;
             try {
@@ -65,12 +65,12 @@ public class Parser {
                 return new Term.Var(tk.index(), bruijn(tk.content()));
             }
             case PI, LAM -> {
-                expect(Lexer.TokenKind.LPAREN);
+                lexer.expect(Lexer.TokenKind.LPAREN);
                 return parsePiLam(tk.index(), tk.kind() == Lexer.TokenKind.PI);
             }
             case LPAREN -> {
                 Term term = parse();
-                expect(Lexer.TokenKind.RPAREN);
+                lexer.expect(Lexer.TokenKind.RPAREN);
                 return term;
             }
             case PROP -> {
@@ -86,10 +86,10 @@ public class Parser {
 
     // after first LPAREN
     private Term parsePiLam(int index, boolean isPi) {
-        String id = expect(Lexer.TokenKind.ID).content();
-        expect(Lexer.TokenKind.COLON);
+        String id = lexer.expect(Lexer.TokenKind.ID).content();
+        lexer.expect(Lexer.TokenKind.COLON);
         Term type = parse();
-        expect(Lexer.TokenKind.RPAREN);
+        lexer.expect(Lexer.TokenKind.RPAREN);
 
         Lexer.Token dot = lexer.next();
         push(id);
@@ -120,14 +120,6 @@ public class Parser {
 
     private int bruijn(String id) {
         return stackSize - 1 - reverseStack.get(id);
-    }
-
-    private Lexer.Token expect(Lexer.TokenKind kind) {
-        Lexer.Token tk = lexer.next();
-        if (tk.kind() != kind)
-            throw new CocBloc(tk.index(),
-                    "unexpected token " + tk.content());
-        return tk;
     }
 
 }

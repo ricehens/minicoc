@@ -64,14 +64,16 @@ public class Main {
         if (args.length != 1 || args[0].equals("-h") || args[0].equals("--help")) {
             // TODO print usage
             tmp();
+            return;
         }
 
+        int i = -1;
         try (BufferedReader br = new BufferedReader(new FileReader(args[0]))) {
             List<String> lines = br.readAllLines();
-            Map<String, String> boundTypes = new HashMap<>();
-            
+            Runtime runtime = new Runtime();
+
 outer:
-            for (int i = 0; i < lines.size();) {
+            for (i = 0; i < lines.size();) {
                 while (lines.get(i).length() == 0)
                     if (++i >= lines.size())
                         break outer;
@@ -89,12 +91,13 @@ outer:
                         && (lines.get(i).length() == 0
                             || Character.isWhitespace(lines.get(i).charAt(0))));
 
-                System.out.println("========");
-                System.out.println(sb.toString());
+                runtime.process(sb.toString());
             }
         } catch (IOException e) {
             System.err.printf("error: could not open file %s%n", args[0]);
             System.exit(1);
+        } catch (CocBloc e) {
+            System.err.printf("error on line %d at index %d: %s%n", i, e.index, e.message);
         }
     }
 

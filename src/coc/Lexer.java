@@ -20,12 +20,12 @@ public class Lexer {
     private final int offset;
 
     public Lexer(Environment env, String str) {
-        String prefix = env.getPrefix();
-        String suffix = env.getSuffix();
-System.out.println(prefix + str + suffix);
-        c = (prefix + str + suffix).toCharArray();
+        if (env == null) env = new Environment();
+        c = env.wrap(str).toCharArray();
+System.out.println("==========\n" + env.wrap(str));
         index = 0;
-        offset = prefix.length();
+        // offset = env.offset();
+offset = 0;
         frozen = new Stack<>();
     }
 
@@ -88,6 +88,15 @@ System.out.println(prefix + str + suffix);
         return index < c.length;
     }
 
+    public Token expect(TokenKind kind) {
+        Token tk = next();
+        if (tk.kind() != kind)
+            throw new CocBloc(tk.index(),
+                    "unexpected token `" + tk.content()
+                    + "`, expected " + kind);
+        return tk;
+    }
+
     private Stack<Integer> frozen;
 
     public void freeze() {
@@ -100,6 +109,10 @@ System.out.println(prefix + str + suffix);
 
     public void unfreezeAndIgnore() {
         frozen.pop();
+    }
+
+    public int getIndex() {
+        return index;
     }
 
 }
