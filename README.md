@@ -56,6 +56,6 @@ Lam(<id>: <term>). <term> -- equivalent to Π
 <term> ⇒ <term>
 <term> -> <term>
 <term> => <term>
--- all equivalent
+-- all equivalent to λ(_: <term>). <term>
 -- right associative
 ```
