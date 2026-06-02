@@ -24,6 +24,10 @@ public class Lexer {
         frozen = new Stack<>();
     }
 
+    private static final Set<Character> SPECIAL_CHARS = Set.of(
+            ':', '(', ')', '.', 'λ', 'Π', '→', '⇒', '-', '='
+    );
+
     public Token next() {
         if (!hasNext()) throw new CocBloc(c.length, "no more tokens");
 
@@ -46,14 +50,11 @@ public class Lexer {
                 yield new Token(TokenKind.ARROW, index, "" + c[index++] + c[index++]);
             }
             default -> {
-                if (!Character.isJavaIdentifierStart(c[index])) {
-                    throw new CocBloc(index, "unexpected character `" + c[index] + "`");
-                }
-
                 int start = index + 1;
                 StringBuilder sb = new StringBuilder();
                 while (index < c.length
-                        && Character.isJavaIdentifierPart(c[index]))
+                        && !Character.isWhitespace(c[index])
+                        && !SPECIAL_CHARS.contains(c[index]))
                     sb.append(c[index++]);
                 String s = sb.toString();
 
