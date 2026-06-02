@@ -119,7 +119,8 @@ inv_of_inv = λ (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
                (idL:   Π(x: G). Eq G (op id x) x)
                (idR:   Π(x: G). Eq G (op x id) x)
                (invL:  Π(x: G). Eq G (op (inv x) x) id).
-             λ (a: G). unique_inv G op id assoc idL idR 
+             λ (a: G).
+               unique_inv G op id assoc idL idR 
                (inv a) 
                (inv (inv a)) 
                a
@@ -134,8 +135,7 @@ socks_and_shoes : Π (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
                     (idR:   Π(x: G). Eq G (op x id) x)
                     (invL:  Π(x: G). Eq G (op (inv x) x) id)
                     (invR:  Π(x: G). Eq G (op x (inv x)) id).
-                  Π (a: G) (b: G).
-                    Eq G (inv (op a b)) (op (inv b) (inv a))
+                  Π (a: G) (b: G). Eq G (inv (op a b)) (op (inv b) (inv a))
 socks_and_shoes = λ (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
                     (assoc: Π(x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
                     (idL:   Π(x: G). Eq G (op id x) x)
