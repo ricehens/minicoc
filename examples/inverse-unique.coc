@@ -27,17 +27,23 @@ congrR = λ(T: Prop) (op: T -> T -> T) (x: T) (y: T) (c: T) (Hxy: Eq T x y).
 
 -- Uniqueness of Inverse
 -- If b * a = id and a * c = id, then b = c.
-unique_inv : Π(G: Prop) (op: G -> G -> G) (id: G) (a: G) (b: G) (c: G)
+unique_inv : Π(G: Prop) (op: G -> G -> G) (id: G) (inv: G -> G) 
              (assoc: Π(x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
-             (idR:   Π(x: G). Eq G (op x id) x)
              (idL:   Π(x: G). Eq G (op id x) x)
+             (idR:   Π(x: G). Eq G (op x id) x)
+             (invL:  Π(x: G). Eq G (op (inv x) x) id)
+             (invR:  Π(x: G). Eq G (op x (inv x)) id)
+             (a: G) (b: G) (c: G)
              (H1:    Eq G (op b a) id)
              (H2:    Eq G (op a c) id).
              Eq G b c
-unique_inv = λ(G: Prop) (op: G -> G -> G) (id: G) (a: G) (b: G) (c: G)
+unique_inv = λ(G: Prop) (op: G -> G -> G) (id: G) (inv: G -> G) 
              (assoc: Π(x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
-             (idR:   Π(x: G). Eq G (op x id) x)
              (idL:   Π(x: G). Eq G (op id x) x)
+             (idR:   Π(x: G). Eq G (op x id) x)
+             (invL:  Π(x: G). Eq G (op (inv x) x) id)
+             (invR:  Π(x: G). Eq G (op x (inv x)) id)
+             (a: G) (b: G) (c: G)
              (H1:    Eq G (op b a) id)
              (H2:    Eq G (op a c) id).
              trans G b (op b id) c
