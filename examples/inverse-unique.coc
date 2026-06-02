@@ -26,7 +26,7 @@ congrR = λ(T: Prop) (op: T -> T -> T) (x: T) (y: T) (c: T) (Hxy: Eq T x y).
          Hxy (λ(z: T). Eq T (op x c) (op z c)) (refl T (op x c))
 
 -- Uniqueness of Inverse
--- If b * a = id and a * c = id then b = c.
+-- If b * a = id and a * c = id, then b = c.
 unique_inv : Π(G: Prop) (op: G -> G -> G) (id: G) (a: G) (b: G) (c: G)
              (assoc: Π(x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
              (idR:   Π(x: G). Eq G (op x id) x)
