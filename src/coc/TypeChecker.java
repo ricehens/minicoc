@@ -2,6 +2,8 @@ package coc;
 
 import java.util.*;
 
+import static coc.BetaReducer.*;
+
 public class TypeChecker {
 
     private List<Term> ctx;
@@ -20,28 +22,47 @@ public class TypeChecker {
             }
 
             case Term.Var(int _, int bruijn)
-                -> BetaReducer.shift(bruijn(bruijn), bruijn + 1, 0);
+                -> shift(bruijn(bruijn), bruijn + 1, 0);
 
-            case Term.Pi(int index, Term type, Term body) -> {
-                throw new UnsupportedOperationException();
+            case Term.Pi(int _, Term type, Term body) -> {
+                Term tType = normalize(infer(type));
+                if (!(tType instanceof Term.Sort))
+                    throw new CocBloc(type.index(),
+                            "expected type Sort for domain of Pi");
+
+                push(type);
+                Term tBody = normalize(infer(body));
+                if (!(tBody instanceof Term.Sort))
+                    throw new CocBloc(body.index(),
+                            "expected type Sort for body of Pi");
+                pop();
+                yield tBody;
             }
 
-            case Term.Lam(int index, Term type, Term body) -> {
-                throw new UnsupportedOperationException();
+            case Term.Lam(int _, Term type, Term body) -> {
+                Term tType = normalize(infer(type));
+                if (!(tType instanceof Term.Sort))
+                    throw new CocBloc(type.index(),
+                            "expected type Sort for domain of Lambda");
+
+                push(type);
+                Term tBody = normalize(infer(body));
+                pop();
+                yield new Term.Pi(-1, type, tBody);
             }
 
             case Term.App(int index, Term left, Term right) -> {
-                Term tLeft = BetaReducer.normalize(infer(left));
+                Term tLeft = normalize(infer(left));
                 if (!(tLeft instanceof Term.Pi(int _, Term domain, Term codomain)))
-                    throw new CocBloc(index,
+                    throw new CocBloc(left.index(),
                             "expected type Pi for left side of function application");
 
-                Term tRight = BetaReducer.normalize(infer(right));
-                if (!domain.equals(tRight))
+                Term tRight = normalize(infer(right));
+                if (!tRight.equals(normalize(domain)))
                     throw new CocBloc(index,
                             "type mismatch for function application");
 
-                yield BetaReducer.subst(codomain, 0, right);
+                yield subst(codomain, 0, right);
             }
         };
     }
