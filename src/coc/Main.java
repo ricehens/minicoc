@@ -3,6 +3,7 @@ package coc;
 public class Main {
 
     static String[] tests = {
+        // : PROP -> PROP -> PROP
         """
             λ(A: Prop) (B: Prop). Π(P: Prop).
             (A -> B -> P) -> P
@@ -16,7 +17,7 @@ public class Main {
 
         "(λ(x: Prop) (y: Prop). x) Type",
 
-        // 1 + 1
+        // 1 + 1 : Nat, i.e. Π(A: Prop). (A -> A) -> (A -> A)
         """
             (
              λ(m: Π(A: Prop). (A -> A) -> (A -> A))
@@ -28,11 +29,33 @@ public class Main {
             )
             (λ(A: Prop) (f: A -> A) (x: A). f x)
             (λ(A: Prop) (f: A -> A) (x: A). f x)
-            """
+            """,
+
+        // 0 : Nat, i.e. (Π PROP (Π (Π 0 1) (Π 1 2)))
+        "λ(A: Prop) (f: A -> A) (x: A). x",
+
+        // K : Π(A: Prop). Π(B: Prop). A -> B -> A
+        "λ(A: Prop) (B: Prop) (x: A) (y: B). x",
+
+        // modus ponens : Π(A: Prop). Π(B: Prop). (A -> B) -> A -> B
+        "λ(A: Prop) (B: Prop) (f: A -> B) (a: A). f a",
+
+        // bot : TYPE
+        "Π(P: Prop). P",
+
+        // id : Π(P: Prop). P -> P
+        "λ(P: Prop). (λ(A: Prop) (x: A). x) P",
+
+        // succ : Nat -> Nat
+        """
+            λ(n: Π(A: Prop). (A -> A) -> (A -> A)).
+            λ(A: Prop) (f: A -> A) (x: A).
+            f (n A f x)
+            """,
     };
 
     public static void main(String[] args) {
-        String s =  tests[5];
+        String s =  tests[11];
 
         try {
             Lexer lex = new Lexer(s);
