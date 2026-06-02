@@ -6,35 +6,80 @@ public sealed interface Term {
         PROP, TYPE
     }
 
-    record Sort(int index, SortKind kind) implements Term {}
+    record Sort(int index, SortKind kind) implements Term {
+
+        @Override
+        public String toString() {
+            return kind.toString();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Sort(int _, SortKind kind2)
+                && kind == kind2;
+        }
+
+    }
 
     // https://en.wikipedia.org/wiki/De_Bruijn_index
     record Var(int index, int bruijn) implements Term {
+
         @Override
         public String toString() {
             return "" + bruijn;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Var(int _, int bruijn2)
+                && bruijn == bruijn2;
+        }
+
     }
 
     record Pi(int index, Term type, Term body) implements Term {
+
         @Override
         public String toString() {
             return String.format("(Π %s %s)", type, body);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Pi(int _, Term type2, Term body2)
+                && type.equals(type2) && body.equals(body2);
+        }
+
     }
 
     record Lam(int index, Term type, Term body) implements Term {
+
         @Override
         public String toString() {
             return String.format("(λ %s %s)", type, body);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Lam(int _, Term type2, Term body2)
+                && type.equals(type2) && body.equals(body2);
+        }
+
     }
 
     record App(int index, Term left, Term right) implements Term {
+
         @Override
         public String toString() {
             return String.format("(%s %s)", left, right);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof App(int _, Term left2, Term right2)
+                && left.equals(left2) && right.equals(right2);
+        }
+
     }
 
     int index();

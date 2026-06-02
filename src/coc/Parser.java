@@ -62,8 +62,7 @@ public class Parser {
                 if (!reverseStack.containsKey(tk.content()))
                     throw new CocBloc(tk.index(),
                             "cannot resolve variable " + tk.content());
-                return new Term.Var(tk.index(),
-                        stackSize - 1 - reverseStack.get(tk.content()));
+                return new Term.Var(tk.index(), bruijn(tk.content()));
             }
             case PI, LAM -> {
                 expect(Lexer.TokenKind.LPAREN);
@@ -117,6 +116,10 @@ public class Parser {
     private void pop(String id) {
         reverseStack.remove(id);
         stackSize--;
+    }
+
+    private int bruijn(String id) {
+        return stackSize - 1 - reverseStack.get(id);
     }
 
     private Lexer.Token expect(Lexer.TokenKind kind) {
