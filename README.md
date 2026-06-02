@@ -46,12 +46,14 @@ Lam(<id>: <term>). <term> -- equivalent to Π
 
 -- Higher-arity lambdas
 λ(<id>: <term>) (<id>: <term>) ... (<id>: <term>). <term>
--- Equivalent to λ(<id>: <term>). λ(<id>: term>). ... λ(<id>: <term>). <term>
--- Also possible with Lam, Π, Pi
+-- equivalent to λ(<id>: <term>). λ(<id>: term>). ... λ(<id>: <term>). <term>
+-- also possible with Lam, Π, Pi
 
--- Implication (all equivalent)
+-- Implication 
 <term> → <term>
 <term> ⇒ <term>
 <term> -> <term>
 <term> => <term>
+-- all equivalent
+-- right associative
 ```
