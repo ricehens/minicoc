@@ -5,9 +5,11 @@ import java.util.*;
 public class Parser {
 
     private Lexer lexer;
+    private Map<String, Term> env;
 
-    public Parser(Lexer lexer) {
+    public Parser(Lexer lexer, Map<String, Term> env) {
         this.lexer = lexer;
+        this.env = env == null ? Map.of() : Map.copyOf(env);
         reverseStack = new HashMap<>();
         stackSize = 0;
     }
@@ -15,7 +17,6 @@ public class Parser {
     private Map<String, Integer> reverseStack;
     private int stackSize;
 
-    // TODO split by colon?
     public Term parse() {
         Term term = parseApplication();
         lexer.freeze();
@@ -59,10 +60,12 @@ public class Parser {
         var tk = lexer.next();
         switch (tk.kind()) {
             case ID -> {
-                if (!reverseStack.containsKey(tk.content()))
-                    throw new CocBloc(tk.index(),
-                            "cannot resolve variable " + tk.content());
-                return new Term.Var(tk.index(), bruijn(tk.content()));
+                if (reverseStack.containsKey(tk.content()))
+                    return new Term.Var(tk.index(), bruijn(tk.content()));
+                if (env.containsKey(tk.content()))
+                    return env.get(tk.content());
+                throw new CocBloc(tk.index(),
+                        "cannot resolve variable " + tk.content());
             }
             case PI, LAM -> {
                 lexer.expect(Lexer.TokenKind.LPAREN);

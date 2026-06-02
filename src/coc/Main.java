@@ -5,6 +5,10 @@ import java.util.*;
 
 public class Main {
 
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_WHITE_BOLD = "\u001B[1;37m";
+    private static final String ANSI_RED_BOLD = "\u001B[1;31m";
+
     static String[] tests = {
         // : PROP -> PROP -> PROP
         """
@@ -72,17 +76,16 @@ public class Main {
             List<String> lines = br.readAllLines();
             Runtime runtime = new Runtime();
 
-outer:
+            outer:
             for (i = 0; i < lines.size();) {
                 while (lines.get(i).length() == 0)
                     if (++i >= lines.size())
                         break outer;
 
-                if (Character.isWhitespace(lines.get(i).charAt(0))) {
-                    System.err.printf("error: unexpected whitespace "
-                            + "at start of line %d%n", i + 1);
-                    System.exit(1);
-                }
+                int line = i + 1;
+
+                if (Character.isWhitespace(lines.get(i).charAt(0)))
+                    throw new CocBloc(line, 0, "unexpected whitespace");
 
                 StringBuilder sb = new StringBuilder();
                 do {
@@ -91,13 +94,19 @@ outer:
                         && (lines.get(i).length() == 0
                             || Character.isWhitespace(lines.get(i).charAt(0))));
 
-                runtime.process(sb.toString());
+                runtime.process(line, sb.toString());
             }
+
+            runtime.flush(args[0]);
         } catch (IOException e) {
-            System.err.printf("error: could not open file %s%n", args[0]);
+            System.err.printf("%s%s: %serror%s could not open file",
+                    ANSI_WHITE_BOLD, args[0], ANSI_RED_BOLD, ANSI_RESET);
             System.exit(1);
         } catch (CocBloc e) {
-            System.err.printf("error on line %d at index %d: %s%n", i, e.index, e.message);
+            System.err.printf("%s%s:%d:%d: %serror:%s %s%n",
+                ANSI_WHITE_BOLD, args[0], e.line, e.index, ANSI_RED_BOLD, ANSI_RESET,
+                e.message);
+            System.exit(1);
         }
     }
 
@@ -105,36 +114,15 @@ outer:
         String s =  tests[12];
 
         try {
-            Environment env = new Environment();
-            env.bind("Nat", tests[5], "Prop");
-            Lexer lex = new Lexer(env, s);
-            /*
-               while (lex.hasNext()) {
-               System.out.println(lex.next());
-               }
-               */
+            Lexer lex = new Lexer(s);
 
-            Parser p = new Parser(lex);
+            Parser p = new Parser(lex, null);
             Term t = p.parse();
             System.out.println(t.print());
             System.out.println(BetaReducer.normalize(t));
             System.out.println(new TypeChecker().infer(t));
 
-            System.out.println(BetaReducer.normalize(t).equals(BetaReducer.normalize(new Parser(new Lexer(env, t.print())).parse())));
-
-            /*
-            if (lex.hasNext()) {
-                Token tk = lex.next();
-                throw new CocBloc(tk.index(),
-                        "unexpected token " + tk.content());
-            }
-            */
-
-            String n2n = "Nat -> Nat";
-            Term tn2n = new Parser(new Lexer(env, n2n)).parse();
-            System.out.println(BetaReducer.normalize(new TypeChecker().infer(t))
-                    .equals(BetaReducer.normalize(tn2n)));
-
+            System.out.println(BetaReducer.normalize(t).equals(BetaReducer.normalize(new Parser(new Lexer(t.print()), null).parse())));
         } catch (CocBloc e) {
             System.err.printf("Error at index %d: %s%n",
                     e.index, e.message);

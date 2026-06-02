@@ -4,48 +4,65 @@ import java.util.*;
 
 public class Runtime {
 
-    private Environment env;
-    private Map<String, String> boundTypes;
+    private Map<String, Term> env;
+    private Queue<Check> promises;
+
+    private record Check(int line, Lexer lexer) {}
 
     public Runtime() {
-        env = new Environment();
-        boundTypes = new HashMap<>();
+        env = new HashMap<>();
+        promises = new LinkedList<>();
     }
 
-    public void process(String s) {
-        Lexer temp = new Lexer(null, s);
-        if (!temp.hasNext()) return;
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_WHITE_BOLD = "\u001B[1;37m";
+    private static final String ANSI_GREEN_BOLD = "\u001B[1;32m";
 
-        Lexer.Token id = temp.expect(Lexer.TokenKind.ID);
-        String name = id.content();
+    public void process(int line, String s) {
+        Lexer lexer = new Lexer(s);
+        if (!lexer.hasNext()) return;
 
-        Lexer.Token token = temp.next();
-        switch (token.kind()) {
-            case COLON -> {
-                String rhs = s.substring(temp.getIndex());
-                if (boundTypes.containsKey(name))
-                    throw new CocBloc(id.index(),
-                            "identifier " + name + " already bound to type");
-                boundTypes.put(name, rhs);
+        lexer.freeze();
+        Lexer.Token id;
+        try {
+            id = lexer.expect(Lexer.TokenKind.ID);
+            lexer.expect(Lexer.TokenKind.EQUAL);
+        } catch (CocBloc e) {
+            lexer.unfreezeAndRevert();
+            promises.offer(new Check(line, lexer));
+            return;
+        }
+
+        Term term = new Parser(lexer, env).parse();
+        if (lexer.hasNext()) {
+            Lexer.Token tk = lexer.next();
+            throw new CocBloc(line, tk.index(),
+                    "unexpected token `" + tk.content() + "`; expected end of line");
+        }
+        env.put(id.content(), term);
+    }
+
+    public void flush(String file) {
+        while (!promises.isEmpty()) {
+            Check promise = promises.poll();
+            try {
+                Lexer lexer = promise.lexer();
+                Term value = new Parser(lexer, env).parse();
+                lexer.expect(Lexer.TokenKind.COLON);
+                Term type = new Parser(lexer, env).parse();
+
+                Term actualType = BetaReducer.normalize(
+                        new TypeChecker().infer(value));
+                Term expectedType = BetaReducer.normalize(type);
+
+                if (!actualType.equals(expectedType))
+                    throw new CocBloc(0, "type checking failed");
+                System.err.printf("%s%s:%d %ssuccess:%s type checking succeeded!%n",
+                        ANSI_WHITE_BOLD, file, promise.line(), ANSI_GREEN_BOLD, ANSI_RESET);
+
+            } catch (CocBloc e) {
+                throw new CocBloc(promise.line(), e.index, e.message);
             }
-            case EQUAL -> {
-                String rhs = s.substring(temp.getIndex());
-                Term term = new Parser(new Lexer(env, rhs)).parse();
-                Term type = new TypeChecker().infer(term);
-
-                String bound = boundTypes.computeIfAbsent(name, _ -> type.print());
-                Term boundType = new Parser(new Lexer(env, bound)).parse();
-
-                if (!BetaReducer.normalize(type).equals(
-                            BetaReducer.normalize(boundType)))
-                    throw new CocBloc(0, String.format(
-                                "type checking unsuccessful; failed to match type:%n%s%n",
-                                boundType));
-
-                env.bind(name, rhs, bound);
-            }
-            default -> throw new CocBloc(token.index(),
-                    "unexpected token, expected `:` or `=`");
         }
     }
 

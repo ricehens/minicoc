@@ -1,9 +1,37 @@
 Nat : Prop
-Nat = Π(A: Prop). (A -> A) -> (A -> A)
+Nat = Π(A: Prop).
+      (A -> A) -> (A -> A) 
+
+zero : Nat
+zero = λ (A: Prop) (f: A -> A) (x: A). x
+
+succ : Nat -> Nat
+succ = λ(n: Nat) (A: Prop) (f: A -> A) (x: A).
+       f (n A f x)
 
 one : Nat
-one = λ(A: Prop) (f: A -> A) (x: A). f x
+one = λ (A: Prop) (f: A -> A) (x: A). f x
+-- one = succ zero
 
 two : Nat
--- two = λ(A: Prop) (f: A -> A) (x: A). f (f x)
-two = λ(A: Prop) (f: A -> A) (x: A). f x
+two = λ (A: Prop) (f: A -> A) (x: A). f (f x)
+
+Eq : Π(T: Prop). T -> T -> Prop
+Eq = λ(T: Prop) (x: T) (y: T).
+     Π(P: T -> Prop). P x -> P y
+
+-- Prop (Reflexivity): x == x for all x
+refl: Π(T: Prop) (x: T). Eq T x x
+refl = λ(T: Prop) (x: T) (P: T -> Prop) (Hx: P x). Hx
+
+one_is_one : Eq Nat one one
+one_is_one = refl zero zero
+
+-- Prop: succ(0) == 1
+-- one_succeeds_zero: Eq Nat (succ zero) one
+-- one_succeeds_zero = refl one one
+
+-- Prop: 1 + 1 == 2
+one_plus_one_equals_two : Eq Nat (plus one one) two
+one_plus_one_equals_two = refl Nat two
+

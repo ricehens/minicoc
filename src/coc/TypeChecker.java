@@ -59,8 +59,6 @@ public class TypeChecker {
 
                 Term tRight = normalize(infer(right));
                 if (!tRight.equals(normalize(domain))) {
-System.out.println("EXPECTED: domain of " + tLeft);
-System.out.println("GOT: " + tRight);
                     throw new CocBloc(index,
                             "type mismatch for function application");
                 }
