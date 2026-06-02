@@ -6,11 +6,11 @@ public class BetaReducer {
         return switch (term) {
             case Term.Sort _, Term.Var _ -> term;
 
-            case Term.Lam(int index, Term type, Term body)
-                -> new Term.Lam(index, normalize(type), normalize(body));
-
             case Term.Pi(int index, Term type, Term body)
                 -> new Term.Pi(index, normalize(type), normalize(body));
+
+            case Term.Lam(int index, Term type, Term body)
+                -> new Term.Lam(index, normalize(type), normalize(body));
 
             case Term.App(int index, Term left, Term right) -> {
                 Term nl = normalize(left);
@@ -33,11 +33,11 @@ public class BetaReducer {
                 else yield term;
             }
 
-            case Term.App(int index, Term left, Term right)
-                -> new Term.App(
+            case Term.Pi(int index, Term type, Term body)
+                -> new Term.Pi(
                         index,
-                        shift(left, amount, cutoff),
-                        shift(right, amount, cutoff));
+                        shift(type, amount, cutoff),
+                        shift(body, amount, cutoff + 1));
 
             case Term.Lam(int index, Term type, Term body)
                 -> new Term.Lam(
@@ -45,11 +45,11 @@ public class BetaReducer {
                         shift(type, amount, cutoff),
                         shift(body, amount, cutoff + 1));
 
-            case Term.Pi(int index, Term type, Term body)
-                -> new Term.Pi(
+            case Term.App(int index, Term left, Term right)
+                -> new Term.App(
                         index,
-                        shift(type, amount, cutoff),
-                        shift(body, amount, cutoff + 1));
+                        shift(left, amount, cutoff),
+                        shift(right, amount, cutoff));
         };
     }
 
@@ -65,11 +65,11 @@ public class BetaReducer {
                 else yield term;
             }
 
-            case Term.App(int index, Term left, Term right)
-                -> new Term.App(
+            case Term.Pi(int index, Term type, Term body)
+                -> new Term.Pi(
                         index,
-                        subst(left, depth, replacement),
-                        subst(right, depth, replacement));
+                        subst(type, depth, replacement),
+                        subst(body, depth + 1, replacement));
 
             case Term.Lam(int index, Term type, Term body)
                 -> new Term.Lam(
@@ -77,11 +77,11 @@ public class BetaReducer {
                         subst(type, depth, replacement),
                         subst(body, depth + 1, replacement));
 
-            case Term.Pi(int index, Term type, Term body)
-                -> new Term.Pi(
+            case Term.App(int index, Term left, Term right)
+                -> new Term.App(
                         index,
-                        subst(type, depth, replacement),
-                        subst(body, depth + 1, replacement));
+                        subst(left, depth, replacement),
+                        subst(right, depth, replacement));
         };
     }
 
