@@ -1,5 +1,5 @@
 # minicoc
-A minimal implementation of the [calculus of constructions](https://en.wikipedia.org/wiki/Calculus_of_constructions), capable of proving intricate theorems such as `1 + 1 == 2`.
+A minimal implementation of the [calculus of constructions](https://en.wikipedia.org/wiki/Calculus_of_constructions), capable of proving intricate theorems such as `1 + 1 == 2` and G&ouml;del's incompleteness theorems.
 
 ## Quick Start
 ```console
