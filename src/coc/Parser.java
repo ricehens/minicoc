@@ -10,11 +10,11 @@ public class Parser {
     public Parser(Lexer lexer, Map<String, Term> env) {
         this.lexer = lexer;
         this.env = env == null ? Map.of() : Map.copyOf(env);
-        reverseStack = new HashMap<>();
+        ctx = new HashMap<>();
         stackSize = 0;
     }
 
-    private Map<String, Integer> reverseStack;
+    private Map<String, Stack<Integer>> ctx;
     private int stackSize;
 
     public Term parse() {
@@ -60,7 +60,7 @@ public class Parser {
         var tk = lexer.next();
         switch (tk.kind()) {
             case ID -> {
-                if (reverseStack.containsKey(tk.content()))
+                if (ctx.containsKey(tk.content()))
                     return new Term.Var(tk.index(), bruijn(tk.content()));
                 if (env.containsKey(tk.content()))
                     return env.get(tk.content());
@@ -113,16 +113,18 @@ public class Parser {
     }
 
     private void push(String id) {
-        reverseStack.put(id, stackSize++);
+        if (!ctx.containsKey(id))
+            ctx.put(id, new Stack<>());
+        ctx.get(id).push(stackSize++);
     }
 
     private void pop(String id) {
-        reverseStack.remove(id);
+        ctx.get(id).pop();
         stackSize--;
     }
 
     private int bruijn(String id) {
-        return stackSize - 1 - reverseStack.get(id);
+        return stackSize - 1 - ctx.get(id).peek();
     }
 
 }
