@@ -39,6 +39,9 @@ public class Runtime {
             throw new CocBloc(line, tk.index(),
                     "unexpected token `" + tk.content() + "`; expected end of line");
         }
+        if (env.containsKey(id.content()))
+            throw new CocBloc(line, 0,
+                    "name `" + id.content() + "` already bound");
         env.put(id.content(), term);
     }
 
