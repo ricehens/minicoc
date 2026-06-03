@@ -3,30 +3,30 @@ Eq : Π (T: *). T → T → *
 Eq = λ (T: *) (x: T) (y: T).
      Π (P: T → *). P x → P y
 
--- Reflexivity: x == x
+-- Reflexivity
 refl : Π (T: *) (x: T). Eq T x x
 refl = λ (T: *) (x: T). λ (P: T → *) (Hx: P x). Hx
 
--- Symmetry: If x == y, then y == x
+-- Symmetry
 sym : Π (T: *) (x: T) (y: T). Eq T x y → Eq T y x
 sym = λ (T: *) (x: T) (y: T).
       λ (Hxy: Eq T x y). Hxy (λ (z: T). Eq T z x) (refl T x)
 
--- Transitivity: If x == y and y == z, then x == z
+-- Transitivity
 trans : Π (T: *) (x: T) (y: T) (z: T).
         Eq T x y → Eq T y z → Eq T x z
 trans = λ (T: *) (x: T) (y: T) (z: T).
         λ (Hxy: Eq T x y) (Hyz: Eq T y z).
         Hyz (λ (w: T). Eq T x w) Hxy
 
--- Left Congruence: If x == y, then c * x == c * y
+-- Left Congruence
 congrL : Π (T: *) (op: T → T → T) (c: T) (x: T) (y: T).
          Eq T x y → Eq T (op c x) (op c y)
 congrL = λ (T: *) (op: T → T → T) (c: T) (x: T) (y: T).
          λ (Hxy: Eq T x y).
          Hxy (λ (z: T). Eq T (op c x) (op c z)) (refl T (op c x))
 
--- Right Congruence: If x == y, then x * c == y * c
+-- Right Congruence
 congrR : Π (T: *) (op: T → T → T) (x: T) (y: T) (c: T).
          Eq T x y → Eq T (op x c) (op y c)
 congrR = λ (T: *) (op: T → T → T) (x: T) (y: T) (c: T).
