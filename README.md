@@ -23,8 +23,8 @@ At runtime, all binds are made before any type-checking occurs. This means you c
 An informal grammar for terms is given below:
 ```
 -- Sorts
-Prop
-Type 
+*
+☐
 
 -- Variables
 <id>
@@ -38,11 +38,13 @@ Type
 -- Application
 <term> <term> -- left associative
 ```
-To avoid Girard's paradox (the type-theory version of Russell's paradox), the type of `Type` may not be inferred. More complicated systems have a hierarchy of types (see the Calculus of Inductive Constructions), but this minimal implementation of CoC does not.
+The type of `*` is `☐`, but to avoid Girard's paradox (the type-theory version of Russell's paradox), the type of `☐` may not be inferred. More complicated systems have a hierarchy of types (see the Calculus of Inductive Constructions), but this minimal implementation of CoC does not.
 
 For notational convenience, the following syntax is also provided:
 ```
 -- Easier-to-type
+Prop -- equivalent to *
+Type -- equivalent to ☐
 Pi(<id>: <term>). <term> -- equivalent to λ
 Lam(<id>: <term>). <term> -- equivalent to Π
 
