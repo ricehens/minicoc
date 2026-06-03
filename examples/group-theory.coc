@@ -1,40 +1,40 @@
 -- Leibniz Equality
-Eq : Π (T: Prop). T → T → Prop
-Eq = λ (T: Prop) (x: T) (y: T).
-     Π (P: T → Prop). P x → P y
+Eq : Π (T: *). T → T → *
+Eq = λ (T: *) (x: T) (y: T).
+     Π (P: T → *). P x → P y
 
 -- Reflexivity: x == x
-refl : Π (T: Prop) (x: T). Eq T x x
-refl = λ (T: Prop) (x: T) (P: T → Prop) (Hx: P x). Hx
+refl : Π (T: *) (x: T). Eq T x x
+refl = λ (T: *) (x: T) (P: T → *) (Hx: P x). Hx
 
 -- Symmetry: If x == y, then y == x
-sym : Π (T: Prop) (x: T) (y: T). Eq T x y → Eq T y x
-sym = λ (T: Prop) (x: T) (y: T) (Hxy: Eq T x y).
+sym : Π (T: *) (x: T) (y: T). Eq T x y → Eq T y x
+sym = λ (T: *) (x: T) (y: T) (Hxy: Eq T x y).
       Hxy (λ (z: T). Eq T z x) (refl T x)
 
 -- Transitivity: If x == y and y == z, then x == z
-trans : Π (T: Prop) (x: T) (y: T) (z: T). Eq T x y → Eq T y z → Eq T x z
-trans = λ (T: Prop) (x: T) (y: T) (z: T) (Hxy: Eq T x y) (Hyz: Eq T y z).
+trans : Π (T: *) (x: T) (y: T) (z: T). Eq T x y → Eq T y z → Eq T x z
+trans = λ (T: *) (x: T) (y: T) (z: T) (Hxy: Eq T x y) (Hyz: Eq T y z).
         Hyz (λ (w: T). Eq T x w) Hxy
 
 -- Left Congruence: If x == y, then c * x == c * y
-congrL : Π (T: Prop) (op: T → T → T) (c: T) (x: T) (y: T). Eq T x y → Eq T (op c x) (op c y)
-congrL = λ (T: Prop) (op: T → T → T) (c: T) (x: T) (y: T) (Hxy: Eq T x y).
+congrL : Π (T: *) (op: T → T → T) (c: T) (x: T) (y: T). Eq T x y → Eq T (op c x) (op c y)
+congrL = λ (T: *) (op: T → T → T) (c: T) (x: T) (y: T) (Hxy: Eq T x y).
          Hxy (λ (z: T). Eq T (op c x) (op c z)) (refl T (op c x))
 
 -- Right Congruence: If x == y, then x * c == y * c
-congrR : Π (T: Prop) (op: T → T → T) (x: T) (y: T) (c: T). Eq T x y → Eq T (op x c) (op y c)
-congrR = λ (T: Prop) (op: T → T → T) (x: T) (y: T) (c: T) (Hxy: Eq T x y).
+congrR : Π (T: *) (op: T → T → T) (x: T) (y: T) (c: T). Eq T x y → Eq T (op x c) (op y c)
+congrR = λ (T: *) (op: T → T → T) (x: T) (y: T) (c: T) (Hxy: Eq T x y).
          Hxy (λ (z: T). Eq T (op x c) (op z c)) (refl T (op x c))
 
 -- Uniqueness of Identity
 -- If b * a = a for all a and a * c = a for all a, then b = c.
-unique_id : Π (G: Prop) (op: G → G → G).
+unique_id : Π (G: *) (op: G → G → G).
             Π (b: G) (c: G)
               (H1:     Π (a: G). Eq G (op b a) a)
               (H2:     Π (a: G). Eq G (op a c) a).
             Eq G b c
-unique_id = λ (G: Prop) (op: G → G → G).
+unique_id = λ (G: *) (op: G → G → G).
             λ (b: G) (c: G)
               (H1:     Π (a: G). Eq G (op b a) a)
               (H2:     Π (a: G). Eq G (op a c) a).
@@ -44,7 +44,7 @@ unique_id = λ (G: Prop) (op: G → G → G).
 
 -- Uniqueness of Inverse
 -- If b * a = id and a * c = id, then b = c.
-unique_inv : Π (G: Prop) (op: G → G → G) (id: G) 
+unique_inv : Π (G: *) (op: G → G → G) (id: G) 
                (assoc: Π (x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
                (idL:   Π (x: G). Eq G (op id x) x)
                (idR:   Π (x: G). Eq G (op x id) x).
@@ -52,7 +52,7 @@ unique_inv : Π (G: Prop) (op: G → G → G) (id: G)
                (H1:    Eq G (op b a) id)
                (H2:    Eq G (op a c) id).
              Eq G b c
-unique_inv = λ (G: Prop) (op: G → G → G) (id: G) 
+unique_inv = λ (G: *) (op: G → G → G) (id: G) 
                (assoc: Π (x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
                (idL:   Π (x: G). Eq G (op id x) x)
                (idR:   Π (x: G). Eq G (op x id) x).
@@ -74,14 +74,14 @@ unique_inv = λ (G: Prop) (op: G → G → G) (id: G)
 
 -- Left Cancellation
 -- If a * b == a * c, then b == c
-left_cancel : Π (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
+left_cancel : Π (G: *) (op: G → G → G) (id: G) (inv: G → G)
                 (assoc: Π (x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
                 (idL:   Π (x: G). Eq G (op id x) x)
                 (invL:  Π (x: G). Eq G (op (inv x) x) id).
               Π (a: G) (b: G) (c: G)
                 (Hyp:   Eq G (op a b) (op a c)).
               Eq G b c
-left_cancel = λ (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
+left_cancel = λ (G: *) (op: G → G → G) (id: G) (inv: G → G)
                 (assoc: Π (x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
                 (idL:   Π (x: G). Eq G (op id x) x)
                 (invL:  Π (x: G). Eq G (op (inv x) x) id).
@@ -108,13 +108,13 @@ left_cancel = λ (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
 
 -- Inverse of Inverse
 -- (a^-1))^-1 == a
-inv_of_inv : Π (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
+inv_of_inv : Π (G: *) (op: G → G → G) (id: G) (inv: G → G)
                (assoc: Π (x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
                (idL:   Π (x: G). Eq G (op id x) x)
                (idR:   Π (x: G). Eq G (op x id) x)
                (invL:  Π (x: G). Eq G (op (inv x) x) id).
              Π (a: G). Eq G (inv (inv a)) a
-inv_of_inv = λ (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
+inv_of_inv = λ (G: *) (op: G → G → G) (id: G) (inv: G → G)
                (assoc: Π (x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
                (idL:   Π (x: G). Eq G (op id x) x)
                (idR:   Π (x: G). Eq G (op x id) x)
@@ -129,14 +129,14 @@ inv_of_inv = λ (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
 
 -- Socks and Shoes
 -- (ab)^-1 == b^-1 * a^-1
-socks_and_shoes : Π (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
+socks_and_shoes : Π (G: *) (op: G → G → G) (id: G) (inv: G → G)
                     (assoc: Π (x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
                     (idL:   Π (x: G). Eq G (op id x) x)
                     (idR:   Π (x: G). Eq G (op x id) x)
                     (invL:  Π (x: G). Eq G (op (inv x) x) id)
                     (invR:  Π (x: G). Eq G (op x (inv x)) id).
                   Π (a: G) (b: G). Eq G (inv (op a b)) (op (inv b) (inv a))
-socks_and_shoes = λ (G: Prop) (op: G → G → G) (id: G) (inv: G → G)
+socks_and_shoes = λ (G: *) (op: G → G → G) (id: G) (inv: G → G)
                     (assoc: Π (x: G) (y: G) (z: G). Eq G (op (op x y) z) (op x (op y z)))
                     (idL:   Π (x: G). Eq G (op id x) x)
                     (idR:   Π (x: G). Eq G (op x id) x)

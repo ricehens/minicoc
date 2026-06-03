@@ -19,7 +19,7 @@ public class Main {
         int i = -1;
         try (BufferedReader br = new BufferedReader(new FileReader(args[0]))) {
             List<String> lines = br.readAllLines();
-            Runtime runtime = new Runtime();
+            Runtime runtime = new Runtime(args[0]);
 
             outer:
             for (i = 0; i < lines.size();) {
@@ -42,7 +42,7 @@ public class Main {
                 runtime.process(line, sb.toString());
             }
 
-            runtime.flush(args[0]);
+            runtime.flush();
         } catch (IOException e) {
             System.err.printf("%s%s: %serror%s unable to open file",
                     ANSI_WHITE_BOLD, args[0], ANSI_RED_BOLD, ANSI_RESET);

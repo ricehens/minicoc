@@ -9,7 +9,6 @@ public class Lexer {
         COLON, LPAREN, RPAREN, DOT,
         ARROW,
         LAM, PI,
-        PROP, TYPE,
         EQUAL,
     };
 
@@ -59,8 +58,6 @@ public class Lexer {
                 String s = sb.toString();
 
                 yield switch (s) {
-                    case "Prop" -> new Token(TokenKind.PROP, start, s);
-                    case "Type" -> new Token(TokenKind.TYPE, start, s);
                     case "Lam" -> new Token(TokenKind.LAM, start, s);
                     case "Pi" -> new Token(TokenKind.PI, start, s);
                     default -> new Token(TokenKind.ID, start, s);

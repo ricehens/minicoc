@@ -76,12 +76,6 @@ public class Parser {
                 lexer.expect(Lexer.TokenKind.RPAREN);
                 return term;
             }
-            case PROP -> {
-                return new Term.Sort(tk.index(), Term.SortKind.PROP);
-            }
-            case TYPE -> {
-                return new Term.Sort(tk.index(), Term.SortKind.TYPE);
-            }
             default -> throw new CocBloc(tk.index(),
                     "unexpected token " + tk.content());
         }

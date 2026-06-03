@@ -4,19 +4,27 @@ import java.util.*;
 
 public class Runtime {
 
-    private Map<String, Term> env;
-    private Queue<Check> promises;
+    private final String file;
+    private final Map<String, Term> env;
+    private final Queue<Check> promises;
 
     private record Check(int line, Lexer lexer) {}
 
-    public Runtime() {
+    public Runtime(String file) {
+        this.file = file;
         env = new HashMap<>();
         promises = new LinkedList<>();
+
+        env.put("Prop", new Term.Sort(-1, Term.SortKind.PROP));
+        env.put("Type", new Term.Sort(-1, Term.SortKind.TYPE));
+        env.put("*", new Term.Sort(-1, Term.SortKind.PROP));
+        env.put("☐", new Term.Sort(-1, Term.SortKind.TYPE));
     }
 
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_WHITE_BOLD = "\u001B[1;37m";
     private static final String ANSI_GREEN_BOLD = "\u001B[1;32m";
+    private static final String ANSI_YELLOW_BOLD = "\u001B[1;33m";
 
     public void process(int line, String s) {
         Lexer lexer = new Lexer(s);
@@ -40,12 +48,13 @@ public class Runtime {
                     "unexpected token `" + tk.content() + "`; expected end of line");
         }
         if (env.containsKey(id.content()))
-            throw new CocBloc(line, 0,
-                    "name `" + id.content() + "` already bound");
+            System.err.printf("%s%s:%d %swarning:%s rebinding name `%s`%n",
+                    ANSI_WHITE_BOLD, file, line, ANSI_YELLOW_BOLD, ANSI_RESET,
+                    id.content());
         env.put(id.content(), term);
     }
 
-    public void flush(String file) {
+    public void flush() {
         while (!promises.isEmpty()) {
             Check promise = promises.poll();
             try {
