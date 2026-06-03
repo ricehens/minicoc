@@ -20,15 +20,15 @@ Eq : Π(T: *). T → T → *
 Eq = λ(T: *) (x: T) (y: T).
      Π(P: T → *). P x → P y
 
--- * (Reflexivity): x == x for all x
+-- Reflexivity: x == x for all x
 refl : Π (T: *) (x: T). Eq T x x
 refl = λ(T: *) (x: T) (P: T → *) (Hx: P x). Hx
 
--- *: succ(0) == 1
+-- succ(0) == 1
 one_succeeds_zero : Eq Nat (succ zero) one
 one_succeeds_zero = refl Nat one
 
--- *: succ(1) == 2
+-- succ(1) == 2
 two_succeeds_one : Eq Nat (succ one) two
 two_succeeds_one = refl Nat two
 
@@ -36,7 +36,7 @@ plus : Nat → Nat → Nat
 plus = λ (m: Nat) (n: Nat) (A: *) (f: A → A) (x: A).
        m A f (n A f x)
 
--- *: 1 + 1 == 2
+-- 1 + 1 == 2
 one_plus_one_equals_two : Eq Nat (plus one one) two
 one_plus_one_equals_two = refl Nat two
 
