@@ -4,7 +4,7 @@ A minimal implementation of the [calculus of constructions](https://en.wikipedia
 ## Quick Start
 ```console
 $ ./gradlew b
-$ ./gradlew r --args="examples/one-plus-one.coc"
+$ ./run.sh examples/one-plus-one.coc
 ```
 
 ## Syntax
