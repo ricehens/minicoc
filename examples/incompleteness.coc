@@ -58,8 +58,8 @@ ThmG1a = λ AXIOMS.
 -- Thm G1b: ⊢ Consistency → φ
 ThmG1b : Π AXIOMS. ⊨ W (⊃ W (Con W ☐) φ)
 ThmG1b = λ AXIOMS. 
-      λ (w: W) (C: Con W ☐ w).
-      G2 w (ThmG1a ARGS w C)
+         λ (w: W) (C: Con W ☐ w).
+         G2 w (ThmG1a ARGS w C)
 
 
 -- Lemma 4: ⊢ ☐(Consistency → φ)
