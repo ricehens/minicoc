@@ -18,7 +18,7 @@ The former binds the name `<id>` to the term given on the right-hand side. The l
 A line that begins with whitespace is treated as a continuation of the previous statement. A line that does not begin with whitespace is treated as the beginning of a new statement.
 Comments begin with `--` and last until the next newline character.
 
-At runtime, all binds are made before any type-checking occurs. This means you can pretend you are writing Haskell and declare a variable's type before giving its definition.
+At runtime, all binds are made before any type-checking occurs. This means you can pretend you are writing Haskell and declare a variable's type before giving its definition. This also means you should avoid rebinding names because confusing things may happen.
 
 An informal grammar for terms is given below:
 ```
